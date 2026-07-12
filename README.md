@@ -23,7 +23,7 @@ The system uses **LangChain + Azure OpenAI models** to perform intelligent news 
 
 ## 🌐 Live Demo
 
-🚀 Streamlit Application:
+🚀 Streamlit Application: https://newsarticlecategorization-summarization.streamlit.app/
 
 # 🎯 Problem Statement
 
