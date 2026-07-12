@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  news-classifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meridian-news-app
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_API_BASE_URL=${LLM_API_BASE_URL:-}
+    volumes:
+      - ./model.py:/app/model.py
+      - ./streamlit_app.py:/app/streamlit_app.py
+      - ./utils.py:/app/utils.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - news-network
+
+networks:
+  news-network:
+    driver: bridge
