@@ -219,7 +219,7 @@ def main():
         st.markdown("""
         This application uses **LLM (Large Language Models)** to:
         - 📊 Classify news articles into categories
-        - 📝 Generate 60-word concise summaries
+        - 📝 Generate concise summaries
         - 📰 Create headline-style summaries
         
         **Categories:**
@@ -404,7 +404,7 @@ def main():
         """, unsafe_allow_html=True)
         
         # Summary Result
-        st.subheader("📄 Concise Summary (60 words)")
+        st.subheader("📄 Concise Summary")
         summary = results['summary']
         
         st.markdown(f"""

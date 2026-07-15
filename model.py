@@ -103,8 +103,11 @@ class LangChainNewsProcessor:
                 api_key=self.config.api_key,
                 api_version=self.config.api_version,
                 deployment_name=self.config.chat_deployment,
-                temperature=0,
-                max_tokens=100
+                temperature=0.1,
+                max_tokens=500,       # ⬆️ Increase for summaries/headlines
+                top_p=0.95,           # Add for better quality
+                frequency_penalty=0,  # Add to prevent repetition
+                presence_penalty=0    # Add for balanced output
             )
             
             print(f"✅ LangChain components initialized (Tier: {self.model_tier})")
@@ -154,104 +157,122 @@ class LangChainNewsProcessor:
             if word not in stop_words
         ]
     
-        return " ".join(words)    
+        return " ".join(words)  
+      
     def _build_classification_prompt(self, headline: str, content: str) -> str:
-        """Build prompt for classification"""
+        """Build prompt for classification"""        
         return f"""
-You are an expert news article classifier.
+You are an expert news article classifier with specialized knowledge in distinguishing 
+technology articles from business articles.
 
 Classify the article into EXACTLY ONE category.
 
 Available categories:
 {', '.join(self.categories)}
 
-Follow these rules strictly:
+=== CRITICAL CLASSIFICATION RULES ===
 
-1. TECHNOLOGY has the highest priority when the article's PRIMARY SUBJECT is:
-   - software, apps, platforms, websites
-   - artificial intelligence, machine learning
-   - hardware, devices, chips, semiconductors
-   - smartphones, computers, gadgets
-   - technology companies and their products/services
-   - cybersecurity, cloud computing, digital infrastructure
-   - technology regulations affecting tech products/platforms
+## TECHNOLOGY PRIORITY RULE (HIGHEST PRIORITY)
 
-   Even if the article mentions:
-   - stock prices
-   - company valuation
-   - lawsuits
-   - CEOs
-   - earnings
-   - investors
-   
-   classify as TECHNOLOGY if the main topic is about the technology product, service, or platform.
+Classify as TECHNOLOGY if ANY of these conditions are met:
 
-2. BUSINESS should only be selected when the PRIMARY SUBJECT is:
-   - company earnings or financial performance
-   - mergers and acquisitions
-   - markets, stocks, investments
-   - economic policy
-   - business strategy unrelated to a specific technology product
+1. **Product/Service Focus**: The article's main subject is a:
+   - Software application, platform, website, or digital service
+   - AI/ML model, algorithm, or automation system
+   - Hardware device (smartphone, computer, chip, sensor, gadget)
+   - Tech infrastructure (cloud, servers, networks, cybersecurity)
 
-3. Ask yourself:
-   "What is this article mainly about?"
+2. **Tech Company Product News**: Even if about a major tech company (Apple, Google, Microsoft, Meta, Amazon, Spotify, etc.), classify as TECHNOLOGY when discussing:
+   - Product launches or updates
+   - Feature releases or changes
+   - Platform policies or rule changes
+   - Technical capabilities or limitations
+   - Software updates or OS changes
+   - App Store policies and developer rules
+   - Digital regulations affecting tech products (DMA, GDPR, etc.)
 
-   If the answer is:
-   "A technology product, platform, software, device, or digital service"
-       -> Technology
+3. **Technology Keywords with High Weight**:
+   - "AI", "artificial intelligence", "machine learning", "neural"
+   - "app", "application", "software", "platform", "digital"
+   - "device", "smartphone", "computer", "chip", "semiconductor"
+   - "cybersecurity", "cloud", "algorithm", "data privacy"
+   - "API", "SDK", "developer", "code", "programming"
 
-   If the answer is:
-   "Money, markets, finance, or general business operations"
-       -> Business
+## BUSINESS CLASSIFICATION (STRICT CRITERIA)
 
-Example 1:
-Headline:
-Spotify allows users to purchase subscriptions through its app in Europe
+Classify as BUSINESS ONLY when the PRIMARY focus is:
 
-Reasoning:
-The article discusses app store rules, digital platforms, and software services.
+1. **Financial Metrics**: Stock prices, earnings reports, revenue, profits, losses
+2. **Corporate Actions**: Mergers, acquisitions, IPOs, layoffs, restructuring
+3. **Market Analysis**: Market share, competition analysis, industry trends (non-tech specific)
+4. **Investment/Finance**: Funding rounds, valuations, investor activities, stock market movements
+5. **General Business Strategy**: Management changes, business partnerships (non-product related)
 
-Category:
-Technology
+## DECISION FRAMEWORK
 
+Ask these questions IN ORDER:
 
-Example 2:
-Headline:
-Spotify reports record quarterly revenue and increased profits
+Q1: Is the article mainly about a technology product, feature, or technical capability?
+    → If YES: Classify as TECHNOLOGY
 
-Reasoning:
-The article focuses on financial performance.
+Q2: Is the article mainly about financial performance, stock markets, or pure business operations?
+    → If YES: Classify as BUSINESS
 
-Category:
-Business
+Q3: If the article mentions BOTH technology and business aspects:
+    - If discussing HOW a technology works or WHAT it does → TECHNOLOGY
+    - If discussing HOW MUCH money was made/lost → BUSINESS
+    - If discussing regulatory rules affecting tech products → TECHNOLOGY
+    - If discussing stock price reaction to news → BUSINESS
 
+=== EXAMPLES ===
 
-Example 3:
-Headline:
-Apple launches a new AI-powered smartphone
+Example 1 (TECHNOLOGY - Platform Policy):
+Headline: "Spotify allows users to purchase subscriptions through its app in Europe"
+Key indicators: "app", "purchase through app", "Europe" (DMA regulation)
+Category: Technology
 
-Reasoning:
-The article focuses on a technology product.
+Example 2 (BUSINESS - Financial Results):
+Headline: "Spotify reports record quarterly revenue and increased profits"
+Key indicators: "revenue", "profits", "quarterly"
+Category: Business
 
-Category:
-Technology
+Example 3 (TECHNOLOGY - Product Launch):
+Headline: "Apple launches a new AI-powered smartphone with advanced camera"
+Key indicators: "AI-powered", "smartphone", "camera" (product features)
+Category: Technology
 
-Example 4: 
-Headline: Spotify to start in-app purchases on iPhone in Europe after DMA takes effect
-Content: "Spotify users in Europe can start to buy audiobooks and subscription plans from within the music-streaming app from March as a result of the regionâ€™s new competition law for Big Tech, the Swedish company said on Wednesday.The move will help the company avoid Appleâ€™s 30% fee for purchases through its App Store, which has long been a source of contention between app developers and the tech giant.Spotify has for years been embroiled in a legal battle, alleging that it was forced to raise the price of its monthly subscriptions to cover costs tied to Appleâ€™s App Store rules. U.S.-listed shares of the Stockholm-based company rose around 2%. Also Read | What are smart rings and should you pick one over a fitness tracker? â€œFor years Apple had these rules where we couldnâ€™t tell you about offers, how much something costs, or even where or how to buy it,â€ Spotify said in a blogpost. â€œThe DMA (Digital Markets Act) means that weâ€™ll finally be able to share details about deals, promotions, and better-value payment options in the EU.â€ Under the DMA, which all Big Tech firms must comply with by March 7, companies are obligated to treat their own products and services like they do rivalsâ€™. ADVERTISEMENT Apple plans to challenge the European Unionâ€™s decision to put all of App Store into the blocâ€™s new digital antitrust list, Bloomberg News had reported in November.On Tuesday, Apple asked a London tribunal to throw out a mass lawsuit worth around $1 billion brought on behalf of more than 1,500 app developers over its App Store rules.Apple had also drawn criticism from Meta Platforms CEO Mark Zuckerberg who called App Store policies and fee structure as problematic and causing a conflict of interest.â€œWeâ€™ve always been interested in helping developers distribute their apps, and new options would add more competition in this space,â€ Meta said on Wednesday.ADVERTISEMENT â€œDevelopers deserve more ways to easily get their apps to the people that want them.â€"
+Example 4 (TECHNOLOGY - App Store Policy):
+Headline: "Spotify to start in-app purchases on iPhone in Europe after DMA takes effect"
+Key indicators: "in-app purchases", "iPhone", "DMA" (tech regulation)
+Despite mentioning: legal battle, fees, shares rising 2%
+Category: Technology (because main topic is app functionality and tech regulation)
 
-Category:
-Technology
+Example 5 (BUSINESS - Stock Market):
+Headline: "Tech stocks surge as market reacts to Fed interest rate decision"
+Key indicators: "stocks surge", "market", "Fed", "interest rate"
+Category: Business
+
+Example 6 (TECHNOLOGY - Despite Business Elements):
+Headline: "Google announces new AI model, shares rise 3%"
+Key indicators: "AI model" is the primary announcement
+Despite mentioning: "shares rise"
+Category: Technology (product announcement is the main news, stock reaction is secondary)
+
+=== YOUR TASK ===
 
 Headline: {headline}
 
 Article Content:
 {content[:2000]}
 
-Return ONLY one category name from:
-{', '.join(self.categories)}
+=== OUTPUT FORMAT ===
+- Return ONLY the category name in UPPERCASE
+- Do not include any explanation or reasoning
+- Do not include punctuation or additional text
+- Valid outputs are ONLY: SPORTS, BUSINESS, TECHNOLOGY, EDUCATION, ENTERTAINMENT
+
 Category:"""
-    
+  
     def _build_summary_prompt(self, headline: str, content: str, max_words: int = 60) -> str:
         """Build prompt for summarization"""
         return f"""You are a professional news editor. Create a concise summary of the following news article.
@@ -261,12 +282,20 @@ Headline: {headline}
 Article:
 {content[:2000]}
 
+=== INSTRUCTIONS ===
+1. Write a clear, informative summary capturing the key points and main message
+2. Use approximately {max_words} words (acceptable range: 50-{max_words} words)
+3. Maintain proper sentence structure with correct capitalization and punctuation
+4. Keep all proper nouns (names, companies, places) intact
+5. Write in professional journalistic style - objective and factual
+6. Include the most important: who, what, when, where, why (if applicable)
+7. Do not add opinions or information not in the original article
 
-Instructions:
-- Write a clear, informative summary
-- Use approximately {max_words} words or less
-- Capture the key points and main message
-- Write in a professional journalistic style
+=== OUTPUT FORMAT ===
+- Write in complete sentences with proper grammar
+- Maintain original capitalization (do not convert to lowercase)
+- Include necessary stopwords for readability
+- Do not add any introductory phrases like "This article discusses..."
 
 Summary:"""
     
@@ -276,14 +305,30 @@ Summary:"""
 
 Original Headline: {headline}
 
-Article:
+Article content:
 {content[:2000]}
 
-Instructions:
-- Create a compelling headline that captures the essence
-- Keep it under 20 words
-- Make it engaging and informative
-- Use newspaper headline style
+=== INSTRUCTIONS ===
+1. Create a compelling headline that captures the essence of the article
+2. Keep it under 20 words (ideal: 10-15 words)
+3. Use newspaper headline style:
+   - Present tense for recent events
+   - Omit unnecessary articles (a, an, the) when appropriate
+   - Use strong, active verbs
+   - Make it engaging and informative
+4. Maintain proper capitalization (Title Case or Sentence case)
+5. Preserve key proper nouns (names, companies, products)
+6. Avoid clickbait - be accurate and factual
+
+=== EXAMPLES ===
+Good: "Spotify Launches In-App Purchases in Europe After DMA Regulation"
+Good: "AI System Breakthrough Promises Faster Drug Discovery"
+Bad: "You Won't Believe What This AI Can Do Now!" (clickbait)
+
+=== OUTPUT FORMAT ===
+- Return ONLY the headline text
+- No quotation marks around the headline
+- No additional explanation
 
 New Headline:"""
     
@@ -326,12 +371,37 @@ New Headline:"""
         """
         start_time = time.time()
         self.stats['total_calls'] += 1
+
+        # Handle edge cases gracefully (don't raise errors)
+        if not headline or not content:
+            return {
+                "category": "Unknown",
+                "confidence": 0.0,
+                "response_time": 0,
+                "tokens_used": 0,
+                "model_tier": self.model_tier,
+                "using_mock": True,
+                "method": "Error - Empty Input",
+                "error": "Headline and content cannot be empty"
+            }    
+        # If content is too short, still try to classify
+        if len(content) < 50:
+            # Proceed with classification anyway
+            # The LLM can handle short content
+            pass    
         
         try:
             prompt = self._build_classification_prompt(headline, content)
             response = self.llm.invoke(prompt)
             category = response.content.strip().title()
             print(category)
+
+            # Extract just the category if response contains extra text
+            for cat in self.categories:
+                if cat.lower() in category.lower():
+                    category = cat
+                    break          
+
             # Validate category
             if category not in self.categories:
                 category = self._mock_classify(headline, content)
@@ -459,11 +529,11 @@ New Headline:"""
         # Classify
         classification = self.classify(cleaned_headline, cleaned_content)
         
-        # Summarize
-        summary = self.summarize(cleaned_headline, cleaned_content, 60)
+        # Summarize use ORIGINAL text for natural output
+        summary = self.summarize(headline, content, 60)
         
-        # Generate headline
-        new_headline = self.generate_headline(cleaned_headline, cleaned_content)
+        # Generate headline use ORIGINAL text for natural output
+        new_headline = self.generate_headline(headline, content)
         
         return {
             'classification': classification,
