@@ -161,103 +161,148 @@ class LangChainNewsProcessor:
       
     def _build_classification_prompt(self, headline: str, content: str) -> str:
         """Build prompt for classification"""        
-        return f"""
-You are an expert news article classifier with specialized knowledge in distinguishing 
-technology articles from business articles.
+        return f"""You are an expert news article classifier with specialized knowledge in categorizing 
+news articles across five domains: Sports, Business, Technology, Education, and Entertainment.
 
-Classify the article into EXACTLY ONE category.
+Classify the article into EXACTLY ONE category based on the content that you feel 
+most confident about.
 
 Available categories:
 {', '.join(self.categories)}
 
-=== CRITICAL CLASSIFICATION RULES ===
+=== CLASSIFICATION GUIDELINES ===
 
-## TECHNOLOGY PRIORITY RULE (HIGHEST PRIORITY)
+TECHNOLOGY:
+Classify as 'technology' when the primary focus is:
+- Technology/tech products (smartphones,platforms, computers, software, apps, gadgets,websites)
+- AI/ML, algorithms, automation, digital services, artificial intelligence, machine learning, neural networks, LLMs
+- Tech company product launches, features, or updates
+- Cybersecurity, cloud computing, semiconductors, data centers, digital infrastructure
+- Technical specifications, comparisons, or reviews
+- Hardware: chips, semiconductors, smartphones, computers, devices, gadgets
+- Tech companies' PRODUCT news: product launches, features, updates, platform changes
+- Technical regulations: DMA, GDPR, app store policies, digital regulations
 
-Classify as TECHNOLOGY if ANY of these conditions are met:
+BUSINESS:
+Classify as 'business' when the primary focus is:
+- Financial metrics (stock prices, revenue, profits, earnings)
+- Corporate actions (mergers, acquisitions, share transfers, IPOs)
+- Market analysis, investments, funding rounds
+- Executive appointments, business partnerships
+- Economic policies, trade, industry trends
+- Financial performance: revenue, profits, earnings reports, quarterly results
+- Mergers, acquisitions, IPOs (unless primarily about tech product integration)
+- Stock market: stock prices, trading, market movements, investor activities
+- Economic policy: interest rates, inflation, trade policies
+- General corporate strategy unrelated to specific tech products
 
-1. **Product/Service Focus**: The article's main subject is a:
-   - Software application, platform, website, or digital service
-   - AI/ML model, algorithm, or automation system
-   - Hardware device (smartphone, computer, chip, sensor, gadget)
-   - Tech infrastructure (cloud, servers, networks, cybersecurity)
+SPORTS:
+Classify as 'sports' when the primary focus is:
+- Athletic competitions, games, matches, tournaments
+- Teams, players, coaches, athletes
+- Scores, championships, leagues, rankings
+- Sports trades, transfers, team management
+- Sports board/organization announcements
 
-2. **Tech Company Product News**: Even if about a major tech company (Apple, Google, Microsoft, Meta, Amazon, Spotify, etc.), classify as TECHNOLOGY when discussing:
-   - Product launches or updates
-   - Feature releases or changes
-   - Platform policies or rule changes
-   - Technical capabilities or limitations
-   - Software updates or OS changes
-   - App Store policies and developer rules
-   - Digital regulations affecting tech products (DMA, GDPR, etc.)
+EDUCATION:
+Classify as 'education' when the primary focus is:
+- Schools, universities, colleges, academic institutions
+- Entrance exams, eligibility, cut-offs, admissions
+- Educational policies, curricula, learning methods
+- Student achievements, academic research
+- Teacher/faculty news, educational appointments
 
-3. **Technology Keywords with High Weight**:
-   - "AI", "artificial intelligence", "machine learning", "neural"
-   - "app", "application", "software", "platform", "digital"
-   - "device", "smartphone", "computer", "chip", "semiconductor"
-   - "cybersecurity", "cloud", "algorithm", "data privacy"
-   - "API", "SDK", "developer", "code", "programming"
+ENTERTAINMENT:
+Classify as 'entertainment' when the primary focus is:
+- Movies, films, TV shows, streaming content
+- Music, concerts, albums, artists
+- Celebrities, actors, directors, performers
+- Box office, film releases, behind-the-scenes
+- Gaming, books, literature, leisure content
 
-## BUSINESS CLASSIFICATION (STRICT CRITERIA)
+=== DECISION APPROACH ===
 
-Classify as BUSINESS ONLY when the PRIMARY focus is:
+Evaluate the article holistically and choose the category you feel most confident about.
+Consider:
+- What is the MAIN subject of the article?
+- Who is the PRIMARY audience?
+- What is the CENTRAL news being reported?
 
-1. **Financial Metrics**: Stock prices, earnings reports, revenue, profits, losses
-2. **Corporate Actions**: Mergers, acquisitions, IPOs, layoffs, restructuring
-3. **Market Analysis**: Market share, competition analysis, industry trends (non-tech specific)
-4. **Investment/Finance**: Funding rounds, valuations, investor activities, stock market movements
-5. **General Business Strategy**: Management changes, business partnerships (non-product related)
-
-## DECISION FRAMEWORK
-
-Ask these questions IN ORDER:
-
-Q1: Is the article mainly about a technology product, feature, or technical capability?
-    → If YES: Classify as TECHNOLOGY
-
-Q2: Is the article mainly about financial performance, stock markets, or pure business operations?
-    → If YES: Classify as BUSINESS
-
-Q3: If the article mentions BOTH technology and business aspects:
-    - If discussing HOW a technology works or WHAT it does → TECHNOLOGY
-    - If discussing HOW MUCH money was made/lost → BUSINESS
-    - If discussing regulatory rules affecting tech products → TECHNOLOGY
-    - If discussing stock price reaction to news → BUSINESS
+=== RULES IF CONFUSED ===
+If confused between business and technology then follow below decision framework: (Only if confused between these two classes)
+Ask yourself: "What is this article MAINLY about?"
+- If "a technology product/platform/service" → technology
+- If "money/financial performance/stock market" → business
+- Even if the article mentions stock prices, earnings, CEOs, or lawsuits, classify as 'technology' if the MAIN topic is about a tech product, service, or platform.
 
 === EXAMPLES ===
 
-Example 1 (TECHNOLOGY - Platform Policy):
-Headline: "Spotify allows users to purchase subscriptions through its app in Europe"
-Key indicators: "app", "purchase through app", "Europe" (DMA regulation)
+Example 1 (TECHNOLOGY):
+Headline: "OnePlus 12 vs Samsung Galaxy S24+: Which flagship phone wins?"
+Content Key indicators: Smartphone comparison, hardware specs, processor, camera, display, battery, AI features
 Category: Technology
 
-Example 2 (BUSINESS - Financial Results):
-Headline: "Spotify reports record quarterly revenue and increased profits"
-Key indicators: "revenue", "profits", "quarterly"
+Example 2 (SPORTS):
+Headline: "India vs England: Harry Brook to fly home, will miss Test series"
+Content: The England Cricket Board (ECB) on Sunday has confirmed that middle-order batsman Harry Brook will return to the UK and miss the India Test tour due to personal reasons.
+â€œHarry Brook is set to return home with immediate effect for personal reasons from the England Menâ€™s Test tour of India. He will not be returning to India,â€ ECB said in a statement.
+Key indicators: Cricket teams, player name, ECB statement, Test tour, sports board announcement
+Category: Sports
+
+Example 3 (ENTERTAINMENT):
+Headline: "Mahesh Babu got migraine during Guntur Kaaram's shoot as he smoked 'real beedi'"
+Content: Actor Mahesh Babuâ€™s latest film Guntur Kaaram has been doing well at the box office. The film features the actor in a rowdy avatar and is shown smoking a â€˜beediâ€™. Recently, the actor opened up about how smoking a â€˜beediâ€™ for the film affected his health. He also clarified that he doesnâ€™t â€˜encourageâ€™ smoking.
+While speaking to Haarika and Hassine Creations, who backed the film, Mahesh Babu revealed that he suffered from migraines when he started shooting for Guntur Kaaram because of the â€˜beediâ€™. Then, the filmâ€™s director Trivikram Srinivas came to his aid and came up with an ayurvedic alternative.
+You have exhausted your monthly limit of free stories.
+Key indicators: Actor, film, box office, shooting, director, celebrity news
+Category: Entertainment
+
+Example 4 (EDUCATION):
+Headline: "NEET MDS 2024 postponed to March 18; check cut-off date"
+Content: The National Board of Examination in Medical Science (NBEMS) has postponed the National Eligibility-cum-Entrance Test for Master of Dental Surgery (NEET MDS 2024). As per the official notification, the NEET MDS 2024 will now be conducted on March 18.
+NBEMS uploaded an official notification at the official website â€” natboard.edu.in.
+The cut-off date for the purpose of eligibility to appear in the NEET MDS 2024 will be March 31, 2024. Earlier, the exam was scheduled to be tentatively conducted on February 9, 2024.
+Read | NEET UG Toppersâ€™ Tips: â€˜Give mock tests to analyse mistakes and work on themâ€™
+The question paper will consist of 240 multiple choice questions â€” Parts A and B consisting of 100 and 140 questions, respectively. Candidates will be awarded 4 marks for every correct answer and 1 mark will be deducted for every wrong answer.
+Last year, the entrance test was scheduled to be conducted on March 1 and the results were declared around the end of March.
+Meanwhile, NBEMS also postponed the NEET PG 2024 exam. According to the schedule released on January 9, the NEET PG 2024 exam will be conducted on July 7, 2024. The cut-off date for the purpose of eligibility to appear in the NEET PG 2024 will be August 15, 2024.
+Key indicators: Entrance exam, National Board of Examination, eligibility, cut-off date, exam schedule
+Category: Education
+
+Example 5 (BUSINESS):
+Headline: "Azim Premji gifts one crore Wipro shares to his sons"
+Content: Wipro founder Azim Premji has transferred 1.02 crore equity shares of Wipro held by him to his two sons Rishad Premji and Tariq Premji as â€˜giftâ€™, according to an exchange filing.
+The Wipro scrip is currently valued at Rs 472.9 per share, and at roughly this value, the transferred shares will amount to a whopping Rs 483 crore. Tech magnate Azim Premjiâ€™s son Rishad Premji currently helms Wipro as its Executive Chairman, and is a prominent face of the IT industry.
+â€œI, Azim H Premji, wish to intimate you that 1,02,30,180 equity shares of Wipro Limited held by me, amounting to 0.20 per cent of the share capital of the company were transferred to Rishad Azim Premji and Tariq Azim Premji in the form of gift,â€ Wipro filing on Wednesday said.
+ADVERTISEMENT
+The transaction, however, would not alter the overall promoter and promoter group shareholding in the company and it will remain the same even after the proposed transaction.
+In another filing by Wipro, Rishad Premji informed that 51,15,090 equity shares of Wipro Ltd has been received as a gift from Azim Premji.
+A similar intimation was made for Tariq Premji, informing that he has also been gifted 51,15,090 equity shares of Wipro Ltd by Azim Premji.
+Key indicators: Share transfer, equity shares, exchange filing, promoter shareholding, Executive Chairman
 Category: Business
 
-Example 3 (TECHNOLOGY - Product Launch):
-Headline: "Apple launches a new AI-powered smartphone with advanced camera"
-Key indicators: "AI-powered", "smartphone", "camera" (product features)
-Category: Technology
-
-Example 4 (TECHNOLOGY - App Store Policy):
-Headline: "Spotify to start in-app purchases on iPhone in Europe after DMA takes effect"
-Key indicators: "in-app purchases", "iPhone", "DMA" (tech regulation)
-Despite mentioning: legal battle, fees, shares rising 2%
-Category: Technology (because main topic is app functionality and tech regulation)
-
-Example 5 (BUSINESS - Stock Market):
-Headline: "Tech stocks surge as market reacts to Fed interest rate decision"
-Key indicators: "stocks surge", "market", "Fed", "interest rate"
+Example 6 (Business)
+Headline: Zee, Sony yet to agree on merger conditions as deadline for extended negotiation nears
+Content: The fate of the USD 10 billion merger between Zee Entertainment Enterprises and Culver Max Entertainment, formerly Sony Pictures Networks India, is hanging by a thread, with the two parties unable to finalise an agreement as the end of the one-month grace period looms.
+The two parties are yet to come to an agreement over Zee Entertainment Enterprises Ltd (ZEEL) MD and CEO Punit Goenka leading the merged entity after Sony expressed concerns after market regulator Sebi barred him from holding managerial posts in Zee and any of the entities in a fund-diversion case.
+Though the Securities and Exchange Board of India order was stayed by the Securities Appellate Tribunal, Sony is not comfortable with Goenka leading the merged entity due to the stringent corporate governance policy in Japan. The contentious issue is not just over Goenka leading the merged entity, but the completion of the deal also depends on how the Indian firm is able to meet the other closing conditions, said an industry source.
+ADVERTISEMENT
+The deal, which was signed between Zee Entertainment and Sony Pictures Networks India in 2021, has a stipulated period of two years in which the merger was to be completed before December 21, 2023, including regulatory and other approvals with a grace period of one month to complete the transaction.
+Also Read | Japanâ€™s Sony says India unitâ€™s merger with Zee Entertainment likely delayed
+By January 21, the one-month grace period for extended negotiations will end. Comments from Sony and ZEEL could not be obtained.
+According to reports, the bone of contention is the driving seat of the merged entity. As per the agreed terms and conditions, Goenka was to lead the merger entity.
+However, Culver Max Entertainment Pvt Ltd (CMEPL) is insisting on making way for its Sony Pictures Network head NP Singh.
+ADVERTISEMENT
+On December 17, the Subhash Chandra family promoted firm sought an extension of the December 21, 2023, deadline from Sony Group Corporation (SGC) firm Culver Max Entertainment and Bangla Entertainment Pvt Ltd (BEPL) under the Merger Cooperation Agreement dated December 22, 2021.
+Earlier, Sony Pictures Networks India (SPNI) stated that it has not yet agreed to a deadline extension requested by ZEEL for their merger proposed USD 10-billion merger. However, a day after it agreed to discuss the matter. The proposed USD 10-billion merger of ZEEL, BEPL and CMEPL has already received regulatory approvals from the fair trade regulator CCI, bourses NSE and BSE, shareholders and creditors of the company.
+In August this year, the Mumbai bench of the National Company Law Tribunal (NCLT) also gave a go-ahead to the merger of ZEEL and Culver Max Entertainment.
+ADVERTISEMENT
+This followed an interim order by Sebi barring Essel Group chairman Subhash Chandra and Zee Entertainment Enterprises Ltd MD and CEO Punit Goenka from holding the position of a director or key managerial personnel in any listed company. The market regulator took action after they were found diverting funds from the company.
+Chandra and Goenka moved the Securities Appellate Tribunal (SAT) challenging the Sebi interim order. In October, SAT quashed the Sebi interim order.
+Earlier in September 2021, then Sony Pictures Networks India and ZEEL entered into a non-binding term sheet to bring together their linear networks, digital assets, production operations and programme libraries. The combined entity will own over 70 TV channels, two video streaming services (ZEE5 and Sony LIV) and two film studios (Zee Studios and Sony Pictures Films India), making it the largest entertainment network in India.
+Subsequently, the two parties signed a definitive agreement for their merger in December 2022. The majority of the board of directors of the combined entity would be nominated by the Sony Group and include the current SPNI Managing Director and CEO NP Singh.
+However, questions over the future of the merger arose after Sebiâ€™s actions against Chandra and Goenka for siphoning off funds of ZEEL.
 Category: Business
-
-Example 6 (TECHNOLOGY - Despite Business Elements):
-Headline: "Google announces new AI model, shares rise 3%"
-Key indicators: "AI model" is the primary announcement
-Despite mentioning: "shares rise"
-Category: Technology (product announcement is the main news, stock reaction is secondary)
-
 === YOUR TASK ===
 
 Headline: {headline}
