@@ -244,59 +244,30 @@ Category: Technology
 
 Example 2 (SPORTS):
 Headline: "India vs England: Harry Brook to fly home, will miss Test series"
-Content: The England Cricket Board (ECB) on Sunday has confirmed that middle-order batsman Harry Brook will return to the UK and miss the India Test tour due to personal reasons.
-â€œHarry Brook is set to return home with immediate effect for personal reasons from the England Menâ€™s Test tour of India. He will not be returning to India,â€ ECB said in a statement.
 Key indicators: Cricket teams, player name, ECB statement, Test tour, sports board announcement
 Category: Sports
 
 Example 3 (ENTERTAINMENT):
 Headline: "Mahesh Babu got migraine during Guntur Kaaram's shoot as he smoked 'real beedi'"
-Content: Actor Mahesh Babuâ€™s latest film Guntur Kaaram has been doing well at the box office. The film features the actor in a rowdy avatar and is shown smoking a â€˜beediâ€™. Recently, the actor opened up about how smoking a â€˜beediâ€™ for the film affected his health. He also clarified that he doesnâ€™t â€˜encourageâ€™ smoking.
-While speaking to Haarika and Hassine Creations, who backed the film, Mahesh Babu revealed that he suffered from migraines when he started shooting for Guntur Kaaram because of the â€˜beediâ€™. Then, the filmâ€™s director Trivikram Srinivas came to his aid and came up with an ayurvedic alternative.
-You have exhausted your monthly limit of free stories.
 Key indicators: Actor, film, box office, shooting, director, celebrity news
 Category: Entertainment
 
 Example 4 (EDUCATION):
 Headline: "NEET MDS 2024 postponed to March 18; check cut-off date"
-Content: The National Board of Examination in Medical Science (NBEMS) has postponed the National Eligibility-cum-Entrance Test for Master of Dental Surgery (NEET MDS 2024). As per the official notification, the NEET MDS 2024 will now be conducted on March 18.
-NBEMS uploaded an official notification at the official website â€” natboard.edu.in.
-The cut-off date for the purpose of eligibility to appear in the NEET MDS 2024 will be March 31, 2024. Earlier, the exam was scheduled to be tentatively conducted on February 9, 2024.
-Read | NEET UG Toppersâ€™ Tips: â€˜Give mock tests to analyse mistakes and work on themâ€™
-The question paper will consist of 240 multiple choice questions â€” Parts A and B consisting of 100 and 140 questions, respectively. Candidates will be awarded 4 marks for every correct answer and 1 mark will be deducted for every wrong answer.
-Last year, the entrance test was scheduled to be conducted on March 1 and the results were declared around the end of March.
-Meanwhile, NBEMS also postponed the NEET PG 2024 exam. According to the schedule released on January 9, the NEET PG 2024 exam will be conducted on July 7, 2024. The cut-off date for the purpose of eligibility to appear in the NEET PG 2024 will be August 15, 2024.
 Key indicators: Entrance exam, National Board of Examination, eligibility, cut-off date, exam schedule
 Category: Education
 
 Example 5 (BUSINESS):
 Headline: "Azim Premji gifts one crore Wipro shares to his sons"
-Content: Wipro founder Azim Premji has transferred 1.02 crore equity shares of Wipro held by him to his two sons Rishad Premji and Tariq Premji as â€˜giftâ€™, according to an exchange filing.
-The Wipro scrip is currently valued at Rs 472.9 per share, and at roughly this value, the transferred shares will amount to a whopping Rs 483 crore. Tech magnate Azim Premjiâ€™s son Rishad Premji currently helms Wipro as its Executive Chairman, and is a prominent face of the IT industry.
-â€œI, Azim H Premji, wish to intimate you that 1,02,30,180 equity shares of Wipro Limited held by me, amounting to 0.20 per cent of the share capital of the company were transferred to Rishad Azim Premji and Tariq Azim Premji in the form of gift,â€ Wipro filing on Wednesday said.
-ADVERTISEMENT
-The transaction, however, would not alter the overall promoter and promoter group shareholding in the company and it will remain the same even after the proposed transaction.
-In another filing by Wipro, Rishad Premji informed that 51,15,090 equity shares of Wipro Ltd has been received as a gift from Azim Premji.
-A similar intimation was made for Tariq Premji, informing that he has also been gifted 51,15,090 equity shares of Wipro Ltd by Azim Premji.
+Content: Share transfer, equity shares, exchange filing, promoter shareholding, Executive Chairman
 Key indicators: Share transfer, equity shares, exchange filing, promoter shareholding, Executive Chairman
 Category: Business
 
 Example 6 (Business)
 Headline: Zee, Sony yet to agree on merger conditions as deadline for extended negotiation nears
-Content: The fate of the USD 10 billion merger between Zee Entertainment Enterprises and Culver Max Entertainment, formerly Sony Pictures Networks India, is hanging by a thread, with the two parties unable to finalise an agreement as the end of the one-month grace period looms.
+Content: Content: The fate of the USD 10 billion merger between Zee Entertainment Enterprises and Culver Max Entertainment, formerly Sony Pictures Networks India, is hanging by a thread, with the two parties unable to finalise an agreement as the end of the one-month grace period looms.
 The two parties are yet to come to an agreement over Zee Entertainment Enterprises Ltd (ZEEL) MD and CEO Punit Goenka leading the merged entity after Sony expressed concerns after market regulator Sebi barred him from holding managerial posts in Zee and any of the entities in a fund-diversion case.
 Though the Securities and Exchange Board of India order was stayed by the Securities Appellate Tribunal, Sony is not comfortable with Goenka leading the merged entity due to the stringent corporate governance policy in Japan. The contentious issue is not just over Goenka leading the merged entity, but the completion of the deal also depends on how the Indian firm is able to meet the other closing conditions, said an industry source.
-ADVERTISEMENT
-The deal, which was signed between Zee Entertainment and Sony Pictures Networks India in 2021, has a stipulated period of two years in which the merger was to be completed before December 21, 2023, including regulatory and other approvals with a grace period of one month to complete the transaction.
-Also Read | Japanâ€™s Sony says India unitâ€™s merger with Zee Entertainment likely delayed
-By January 21, the one-month grace period for extended negotiations will end. Comments from Sony and ZEEL could not be obtained.
-According to reports, the bone of contention is the driving seat of the merged entity. As per the agreed terms and conditions, Goenka was to lead the merger entity.
-However, Culver Max Entertainment Pvt Ltd (CMEPL) is insisting on making way for its Sony Pictures Network head NP Singh.
-ADVERTISEMENT
-On December 17, the Subhash Chandra family promoted firm sought an extension of the December 21, 2023, deadline from Sony Group Corporation (SGC) firm Culver Max Entertainment and Bangla Entertainment Pvt Ltd (BEPL) under the Merger Cooperation Agreement dated December 22, 2021.
-Earlier, Sony Pictures Networks India (SPNI) stated that it has not yet agreed to a deadline extension requested by ZEEL for their merger proposed USD 10-billion merger. However, a day after it agreed to discuss the matter. The proposed USD 10-billion merger of ZEEL, BEPL and CMEPL has already received regulatory approvals from the fair trade regulator CCI, bourses NSE and BSE, shareholders and creditors of the company.
-In August this year, the Mumbai bench of the National Company Law Tribunal (NCLT) also gave a go-ahead to the merger of ZEEL and Culver Max Entertainment.
-ADVERTISEMENT
 This followed an interim order by Sebi barring Essel Group chairman Subhash Chandra and Zee Entertainment Enterprises Ltd MD and CEO Punit Goenka from holding the position of a director or key managerial personnel in any listed company. The market regulator took action after they were found diverting funds from the company.
 Chandra and Goenka moved the Securities Appellate Tribunal (SAT) challenging the Sebi interim order. In October, SAT quashed the Sebi interim order.
 Earlier in September 2021, then Sony Pictures Networks India and ZEEL entered into a non-binding term sheet to bring together their linear networks, digital assets, production operations and programme libraries. The combined entity will own over 70 TV channels, two video streaming services (ZEE5 and Sony LIV) and two film studios (Zee Studios and Sony Pictures Films India), making it the largest entertainment network in India.
